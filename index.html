@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industry Directory 2020-2023</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-gradient: linear-gradient(135deg, #F5F0E8 0%, #E6DACE 100%);
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(222, 205, 189, 0.5);
+            --text-primary: #4A423B;
+            --text-secondary: #6B6259;
+            --text-tertiary: #8A817C;
+            --shadow: 0 8px 32px 0 rgba(138, 129, 124, 0.3);
+            --backdrop-blur: blur(15px);
+        }
+        body {
+            font-family: 'Lexend', sans-serif;
+            font-weight: 300;
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(205, 187, 167, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(222, 205, 189, 0.3), transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.3), transparent 50%);
+            z-index: -1;
+            animation: gradientShift 20s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 100;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 40px rgba(74, 66, 59, 0.2);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 200;
+            color: var(--text-secondary);
+            letter-spacing: 0.1em;
+        }
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease 0.2s both;
+        }
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-family: 'Lexend', sans-serif;
+            font-weight: 300;
+            font-size: 1rem;
+            backdrop-filter: var(--backdrop-blur);
+            transition: all 0.3s ease;
+        }
+        .search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(74, 66, 59, 0.4);
+            box-shadow: 0 0 30px rgba(74, 66, 59, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            padding: 0.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .tab {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 15px;
+            color: var(--text-secondary);
+            font-family: 'Lexend', sans-serif;
+            font-weight: 400;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(74, 66, 59, 0.05);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .tab:hover::before {
+            transform: translateX(0);
+        }
+        .tab.active {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--text-primary);
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(74, 66, 59, 0.1);
+        }
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(74, 66, 59, 0.1);
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 200;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: var(--backdrop-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+        .table-wrapper {
+            max-height: 500px; /* Added max-height for scrolling long tables */
+            overflow: auto;
+            margin: -1rem;
+            padding: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        thead {
+            position: sticky;
+            top: -1rem; /* Adjust based on padding */
+            z-index: 10;
+        }
+        thead tr {
+            background: rgba(230, 218, 206, 0.7); /* Slightly darker sticky header */
+            backdrop-filter: var(--backdrop-blur);
+        }
+        th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        th:hover {
+            color: var(--text-primary);
+        }
+        tbody tr {
+            transition: all 0.2s ease-out;
+            border-bottom: 1px solid rgba(138, 129, 124, 0.15);
+        }
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.01);
+        }
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+        td {
+            padding: 1.2rem 1rem;
+            font-weight: 300;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        .name-cell {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        .year-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(74, 66, 59, 0.1);
+            border-radius: 10px;
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+        .link-cell a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            background: rgba(74, 66, 59, 0.08);
+            border-radius: 12px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 400;
+        }
+        .link-cell a:hover {
+            background: rgba(74, 66, 59, 0.15);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+        .instagram-cell {
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            font-weight: 200;
+            font-size: 1.2rem;
+            color: var(--text-tertiary);
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .floating-orb {
+            position: fixed;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(222, 205, 189, 0.4), transparent 70%);
+            filter: blur(50px);
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+        }
+        .orb-1 { width: 300px; height: 300px; top: 10%; left: -150px; animation-delay: 0s; }
+        .orb-2 { width: 200px; height: 200px; bottom: 10%; right: -100px; animation-delay: 7s; }
+        .orb-3 { width: 250px; height: 250px; top: 50%; right: 10%; animation-delay: 14s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(100px, -50px) scale(1.1); }
+            66% { transform: translate(-50px, 100px) scale(0.9); }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            h1 { font-size: 2.5rem; }
+            .controls, .stats-bar { flex-direction: column; }
+            .table-container { padding: 1.5rem; }
+            th, td { padding: 1rem 0.8rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+
+    <div class="container">
+        <header>
+            <h1>Industry Directory</h1>
+            <p class="subtitle">London's Emerging Brands 2020-2023</p>
+        </header>
+
+        <div class="controls">
+            <div class="search-container">
+                <span class="search-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by name, description, or year...">
+            </div>
+            <div class="tabs">
+                <button class="tab active" data-category="all">All Industries</button>
+                <button class="tab" data-category="fashion">Fashion</button>
+                <button class="tab" data-category="hospitality">Hospitality</button>
+                <button class="tab" data-category="product">Products</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">Total Brands</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="fashionCount">0</div>
+                <div class="stat-label">Fashion</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="hospitalityCount">0</div>
+                <div class="stat-label">Hospitality</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="productCount">0</div>
+                <div class="stat-label">Products</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="name">Name ↕</th>
+                            <th data-sort="description">Description</th>
+                            <th data-sort="year">Year ↕</th>
+                            <th>Website</th>
+                            <th>Instagram</th>
+                            <th data-sort="category">Industry ↕</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Table content will be inserted here -->
+                    </tbody>
+                </table>
+                <div class="no-results hidden" id="noResults">No results found. Try adjusting your search.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data
+            const fashionData = [
+                { name: "LỰU ĐẠN (Lu'u Dan)", description: "Menswear label blending Asian heritage, streetwear and luxury tailoring.", year: 2021, website: "https://luu-dan.com/", instagram: "@luudan_official (~82K)" },
+                { name: "Sinéad O'Dwyer", description: "Womenswear label focusing on inclusive sizing and crafted garments.", year: 2021, website: "https://sineadodwyer.com/", instagram: "@sjodwyer (~59.7k)" },
+                { name: "Labrum London", description: "Menswear label mixing West African heritage & British tailoring.", year: 2020, website: "https://labrumlondon.com/", instagram: "@labrumlondon (~57.4K)" },
+                { name: "Ahluwalia", description: "Fashion brand merging Indian & Nigerian heritage with sustainable fabrics.", year: 2020, website: "https://ahluwalia.world/", instagram: "@ahluwalia (~79.1K)" },
+                { name: "Hegarty", description: "London-based sustainable outerwear for women, men, and unisex", year: 2021, website: "https://www.hegartylondon.com/", instagram: "@hegartylondon (~3.2K)" },
+                { name: "Aligne", description: "Sustainable women's wardrobe brand from East London", year: 2020, website: "https://aligne.co/", instagram: "@aligne (~174K)" },
+                { name: "Cou Cou Intimates", description: "Body-positive lingerie and underwear made with 100% organic cotton", year: 2021, website: "https://coucouintimates.com/", instagram: "@coucouintimates (~186k)" },
+                { name: "Hey Savi", description: "AI-driven fashion search engine (\"search and shop by image/text\")", year: 2023, website: "https://heysavi.com/", instagram: "@heysaviofficial (~455)" },
+                { name: "7879", description: "Contemporary jewellery house (designing modern pieces)", year: 2021, website: "https://7879.co/", instagram: "@7879_london (~27.6k)" },
+                { name: "The Edit LDN", description: "Online marketplace for limited-edition sneakers and streetwear", year: 2020, website: "https://www.theeditldn.com/", instagram: "@theeditldn (~55.6k)" },
+                { name: "Saul Nash", description: "Sportswear-meets-dance label redefining menswear.", year: 2021, website: "https://saulnash.com/", instagram: "@saul.nash (~34.8K)" },
+                { name: "Stefan Cooke", description: "Avant-garde menswear with modern tailoring.", year: 2020, website: "https://www.stefancooke.co.uk/", instagram: "@stefan_cooke (~86.4k)" },
+                { name: "Masha Popova", description: "Ukrainian-born London designer with Y2K-inspired looks.", year: 2021, website: "https://masha-popova.com/", instagram: "@mashapopovap (~73.2k)" },
+                { name: "Feben", description: "London-based womenswear with bold prints & sculptural looks.", year: 2020, website: "https://feben.co/", instagram: "@feben.x (~27.3k)" },
+                { name: "Roker Atelier", description: "Footwear label blending punk with luxury.", year: 2020, website: "https://www.rokeratelier.com/", instagram: "@rokeratelier (~10.2k)" }
+            ];
+            const hospitalityData = [
+                { name: "Dauns", description: "Vegan Scandinavian-inspired café and delicatessen", year: 2021, website: "https://dauns.co.uk/", instagram: "@dauns_scandifood (~7K)" },
+                { name: "Café Petiole", description: "Independent (mostly) vegan café in Somerset House serving seasonal fare", year: 2023, website: "https://www.cafepetiole.co.uk/", instagram: "@cafepetiole (~5.3k)" },
+                { name: "The Dialogue Cafe", description: "Neighborhood eatery on Upper Clapton Road in London", year: null, website: "", instagram: "@the_dialogue_cafe (~1K)" },
+                { name: "The Lost Poet", description: "Boutique 4-room townhouse hotel in Notting Hill", year: 2021, website: "https://www.thelostpoet.co.uk/", instagram: "@thelostpoetportobello (~11.9K)" },
+                { name: "Bonsai Plant Kitchen", description: "South-east Asian vegan restaurant", year: 2021, website: "https://www.bonsaiplantkitchen.co.uk/", instagram: "@bonsaiplantkitchen (~10.5K)" },
+                { name: "Bean's Café", description: "Plant-based community café near Hackney Downs", year: 2020, website: "", instagram: "@beanandfriendsltd (~5.1K)" },
+                { name: "Lisboeta", description: "Portuguese restaurant in Fitzrovia.", year: 2022, website: "https://www.lisboeta.co.uk/", instagram: "@lisboeta.london (~48.3k)" },
+                { name: "Evelyn's Table", description: "Soho fine dining counter.", year: 2020, website: "", instagram: "@evelynstable (~33k)" },
+                { name: "Princess Royal", description: "Victorian pub with 4 boutique bedrooms in Notting Hill", year: 2021, website: "https://www.cubitthouse.co.uk/the-princess-royal-boutique-hotel-notting-hill/", instagram: "@princessroyalnottinghill (~22.1k)" },
+                { name: "GECKO Coffeehouse", description: "A coffee and plant shop in Camden", year: 2023, website: "https://geckocoffee.house/", instagram: "@geckocoffeehouse (~9k)" },
+                { name: "Inhabit", description: "A wellness-focused boutique hotel", year: 2021, website: "https://www.inhabithotels.com/", instagram: "@inhabit_hotels (~15.2K)" },
+                { name: "Moko", description: "A bustling Italian café and deli", year: 2022, website: "https://mokorestaurant.com/", instagram: "@moko.hinckley (~3.3k)" },
+                { name: "Laxeiro", description: "A Galician restaurant and tapas bar. (Relaunched 2022).", year: 2022, website: "https://laxeiro.co.uk/", instagram: "@laxiero_restaurant (~2.6k)" },
+                { name: "Queen of Cups", description: "A critically acclaimed, female-led restaurant", year: 2021, website: "https://queenofcups.co.uk/", instagram: "@glastoqueenofcups (~4.6k)" }
+            ];
+            const productData = [
+                { name: "Fara Homidi Beauty", description: "Make-up brand", year: 2023, website: "https://farahomidi.com/", instagram: "@farahomidibeauty (~29.8K)" },
+                { name: "RATA", description: "Luxury bead-art jewellery brand", year: 2023, website: "https://www.cafepetiole.co.uk/", instagram: "@ratalove.in (~5.5k)" },
+                { name: "Some Grub", description: "Dog treats made from insect protein.", year: 2021, website: "https://somegrub.co.uk/", instagram: "@somegrub (~1.6K)" },
+                { name: "Our Remedy", description: "Natural wellness brand (CBD remedies for sleep, PMS, stress)", year: 2020, website: "https://ourremedy.co.uk/", instagram: "@itsourremedy (~9.9K)" },
+                { name: "Carisips", description: "Non-alcoholic ginger/turmeric beer alternative", year: 2020, website: "https://www.carisips.com/", instagram: "@carisips (~1.1K)" },
+                { name: "Workshop Coffee", description: "Specialty coffee roaster & goods.", year: 2020, website: "https://workshopcoffee.com/", instagram: "@workshopcoffee (~52.8K)" },
+                { name: "Charlene Mullen", description: "Embroidered textiles & homeware.", year: 2020, website: "https://www.charlenemullen.com/", instagram: "@charlene_mullen (~2.5k)" },
+                { name: "House of Quinn", description: "Textile-based art & home goods.", year: 2020, website: "https://houseofquinn.co.uk/", instagram: "@houseofquinn (~23.7k)" },
+                { name: "Grace & Thorn", description: "Urban plant & lifestyle store.", year: 2020, website: "https://graceandthorn.com/", instagram: "@graceandthorn (~90.8k)" },
+                { name: "Molesworth & Bird", description: "Seaweed press prints & gifts.", year: 2020, website: "https://www.molesworthandbird.com/", instagram: "@molesworthandbird (~24.2k)" },
+                { name: "Aerende", description: "Home goods made by people facing social challenges.", year: 2020, website: "https://www.aerende.co.uk/", instagram: "@aerendeshop (~12.4K)" },
+                { name: "Aeyre", description: "Modern homeware brand.", year: 2021, website: "https://reliquiacollective.com/collections/aeyre", instagram: "@aeyre_home (~8k)" },
+                { name: "Fern Fans", description: "Artisan hand fans.", year: 2020, website: "", instagram: "@fernfans_ (~3k)" },
+                { name: "Rosie Dalia", description: "Homeware & kids' clothing celebrating Indian craft.", year: 2021, website: "https://www.rosiedalia.com/", instagram: "@rosiedaliahome (~6.8k)" }
+            ];
+
+            // Combine all data with a category property
+            const allData = [
+                ...fashionData.map(item => ({ ...item, category: 'fashion' })),
+                ...hospitalityData.map(item => ({ ...item, category: 'hospitality' })),
+                ...productData.map(item => ({ ...item, category: 'product' }))
+            ];
+
+            let currentCategory = 'all';
+            let currentSort = { field: 'name', ascending: true };
+            let filteredData = [...allData];
+
+            const tbody = document.getElementById('tableBody');
+            const noResults = document.getElementById('noResults');
+
+            function renderTable(data) {
+                if (data.length === 0) {
+                    tbody.innerHTML = '';
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+
+                noResults.classList.add('hidden');
+                tbody.innerHTML = data.map(item => `
+                    <tr>
+                        <td class="name-cell">${item.name}</td>
+                        <td>${item.description}</td>
+                        <td>${item.year ? `<span class="year-badge">${item.year}</span>` : '—'}</td>
+                        <td class="link-cell">${item.website ? `<a href="${item.website}" target="_blank" rel="noopener noreferrer">Visit →</a>` : '—'}</td>
+                        <td class="instagram-cell">${item.instagram || '—'}</td>
+                        <td>${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</td>
+                    </tr>
+                `).join('');
+            }
+
+            function updateStats() {
+                document.getElementById('totalCount').textContent = allData.length;
+                document.getElementById('fashionCount').textContent = fashionData.length;
+                document.getElementById('hospitalityCount').textContent = hospitalityData.length;
+                document.getElementById('productCount').textContent = productData.length;
+            }
+            
+            function filterAndSort() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                let tempData = [...allData];
+
+                // 1. Filter by category
+                if (currentCategory !== 'all') {
+                    tempData = tempData.filter(item => item.category === currentCategory);
+                }
+
+                // 2. Filter by search term
+                if (searchTerm) {
+                    tempData = tempData.filter(item =>
+                        (item.name && item.name.toLowerCase().includes(searchTerm)) ||
+                        (item.description && item.description.toLowerCase().includes(searchTerm)) ||
+                        (item.year && item.year.toString().includes(searchTerm))
+                    );
+                }
+                
+                // 3. Sort the data
+                if (currentSort.field) {
+                    tempData.sort((a, b) => {
+                        const valA = a[currentSort.field] === null ? '' : a[currentSort.field];
+                        const valB = b[currentSort.field] === null ? '' : b[currentSort.field];
+                        
+                        let comparison = 0;
+                        if (valA > valB) comparison = 1;
+                        else if (valA < valB) comparison = -1;
+                        
+                        return currentSort.ascending ? comparison : comparison * -1;
+                    });
+                }
+                
+                filteredData = tempData;
+                renderTable(filteredData);
+            }
+
+            function setupEventListeners() {
+                document.getElementById('searchInput').addEventListener('input', filterAndSort);
+
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        document.querySelector('.tab.active').classList.remove('active');
+                        e.currentTarget.classList.add('active');
+                        currentCategory = e.currentTarget.dataset.category;
+                        filterAndSort();
+                    });
+                });
+
+                document.querySelectorAll('th[data-sort]').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const field = th.dataset.sort;
+                        if (currentSort.field === field) {
+                            currentSort.ascending = !currentSort.ascending;
+                        } else {
+                            currentSort.field = field;
+                            currentSort.ascending = true;
+                        }
+                        filterAndSort();
+                    });
+                });
+            }
+
+            // Initial load
+            updateStats();
+            setupEventListeners();
+            filterAndSort(); // Initial render with default sort
+        });
+    </script>
+</body>
+</html>
+
