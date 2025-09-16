@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glassy Markdown Editor</title>
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Lexend -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* Custom styles for the application */
+        body {
+            font-family: 'Lexend', sans-serif;
+            font-weight: 300; /* Use a thinner weight for the Lexend font */
+        }
+
+        /* Custom scrollbar for a cleaner look */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Styling for the rendered markdown content in the preview pane */
+        .markdown-preview h1, .markdown-preview h2, .markdown-preview h3 {
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 0.25rem;
+        }
+        .markdown-preview h1 { font-size: 1.75em; }
+        .markdown-preview h2 { font-size: 1.4em; }
+        .markdown-preview h3 { font-size: 1.2em; }
+        .markdown-preview p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        .markdown-preview a {
+            color: #a58a69;
+            text-decoration: underline;
+        }
+        .markdown-preview ul, .markdown-preview ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .markdown-preview li {
+            margin-bottom: 0.25rem;
+        }
+        .markdown-preview code {
+            background-color: rgba(210, 192, 170, 0.4);
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        .markdown-preview pre {
+            background-color: rgba(210, 192, 170, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .markdown-preview pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .markdown-preview blockquote {
+            border-left: 4px solid #d2c0aa;
+            padding-left: 1rem;
+            margin-left: 0;
+            color: #5c5246;
+            font-style: italic;
+        }
+    </style>
+    <script>
+        // Custom Tailwind CSS configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'beige-light': '#F5F5DC',
+                        'beige-medium': '#E8DDCB',
+                        'beige-dark': '#D2B48C',
+                        'brand-brown': '#A0522D',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-beige-light">
+
+    <div class="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-beige-light via-beige-medium to-beige-light">
+        <main class="w-full max-w-6xl h-[90vh] bg-white/40 backdrop-blur-xl shadow-2xl shadow-brand-brown/10 rounded-3xl flex flex-col overflow-hidden border border-white/50">
+            
+            <!-- Toolbar -->
+            <div class="flex-shrink-0 bg-white/30 backdrop-blur-lg border-b border-white/50 px-4 py-2">
+                <div class="flex items-center space-x-2 text-gray-600">
+                    <button id="bold-btn" title="Bold" class="p-2 rounded-lg hover:bg-black/5 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>
+                    </button>
+                    <button id="italic-btn" title="Italic" class="p-2 rounded-lg hover:bg-black/5 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg>
+                    </button>
+                    <button id="underline-btn" title="Underline" class="p-2 rounded-lg hover:bg-black/5 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a6 6 0 0 0 6 6 6 6 0 0 0 6-6V3"></path><line x1="4" y1="21" x2="20" y2="21"></line></svg>
+                    </button>
+                    <button id="code-btn" title="Code" class="p-2 rounded-lg hover:bg-black/5 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    </button>
+                    <div class="h-6 w-px bg-black/10 mx-2"></div>
+                    <button id="ul-btn" title="Bulleted List" class="p-2 rounded-lg hover:bg-black/5 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    </button>
+                    <button id="ol-btn" title="Numbered List" class="p-2 rounded-lg hover:bg-black/5 transition-colors duration-200">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Editor and Preview Panes -->
+            <div class="flex-grow grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+                <!-- Textarea for Markdown Input -->
+                <textarea 
+                    id="markdown-input" 
+                    class="w-full h-full p-6 bg-transparent outline-none resize-none custom-scrollbar text-gray-800 placeholder-gray-500"
+                    placeholder="Start writing your beautiful text here..."></textarea>
+
+                <!-- Div for HTML Preview -->
+                <div 
+                    id="markdown-preview" 
+                    class="w-full h-full p-6 overflow-y-auto custom-scrollbar border-l border-white/50 markdown-preview hidden md:block bg-black/5">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const markdownInput = document.getElementById('markdown-input');
+            const markdownPreview = document.getElementById('markdown-preview');
+
+            // Initial content to guide the user
+            const initialContent = `# Welcome to your Markdown Editor!
+## A clean space for your thoughts.
+
+This is a simple, beautiful, and functional markdown editor built with a modern design aesthetic.
+
+**Features:**
+- **Bold Text**
+- *Italic Text*
+- \`Inline Code\`
+- <u>Underlined Text</u> (using HTML tags)
+
+> "Simplicity is the ultimate sophistication." - Leonardo da Vinci
+
+### Lists are easy too:
+* Unordered list item 1
+* Unordered list item 2
+
+1.  Ordered list item 1
+2.  Ordered list item 2
+
+---
+
+Start typing on the left, and see your formatted text appear on the right!`;
+            
+            markdownInput.value = initialContent;
+            
+            // Function to update the preview pane
+            function updatePreview() {
+                const markdownText = markdownInput.value;
+                const htmlText = marked.parse(markdownText);
+                markdownPreview.innerHTML = htmlText;
+            }
+
+            // Update preview on input
+            markdownInput.addEventListener('input', updatePreview);
+            // Initial render
+            updatePreview();
+
+            // Toolbar functionality
+            const buttons = {
+                'bold-btn': { pre: '**', post: '**' },
+                'italic-btn': { pre: '*', post: '*' },
+                'underline-btn': { pre: '<u>', post: '</u>' },
+                'code-btn': { pre: '`', post: '`' },
+            };
+
+            // Generic function to wrap selected text
+            function wrapText(pre, post) {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const selectedText = markdownInput.value.substring(start, end);
+                const beforeText = markdownInput.value.substring(0, start);
+                const afterText = markdownInput.value.substring(end);
+
+                markdownInput.value = `${beforeText}${pre}${selectedText}${post}${afterText}`;
+                
+                // Adjust cursor position
+                if (start === end) {
+                    markdownInput.selectionStart = markdownInput.selectionEnd = start + pre.length;
+                } else {
+                    markdownInput.selectionStart = start + pre.length;
+                    markdownInput.selectionEnd = end + pre.length;
+                }
+                
+                markdownInput.focus();
+                updatePreview();
+            }
+
+            // Generic function to add list items
+            function addList(marker) {
+                const start = markdownInput.selectionStart;
+                const end = markdownInput.selectionEnd;
+                const selectedText = markdownInput.value.substring(start, end);
+                const beforeText = markdownInput.value.substring(0, start);
+                const afterText = markdownInput.value.substring(end);
+
+                const lines = selectedText.split('\n');
+                let newText = '';
+                if(marker === '1. ') {
+                     newText = lines.map((line, index) => `${index + 1}. ${line}`).join('\n');
+                } else {
+                     newText = lines.map(line => `${marker} ${line}`).join('\n');
+                }
+                
+                markdownInput.value = `${beforeText}${newText}${afterText}`;
+                markdownInput.focus();
+                updatePreview();
+            }
+
+            // Add event listeners for toolbar buttons
+            for (const [id, format] of Object.entries(buttons)) {
+                document.getElementById(id).addEventListener('click', () => {
+                    wrapText(format.pre, format.post);
+                });
+            }
+
+            document.getElementById('ul-btn').addEventListener('click', () => addList('*'));
+            document.getElementById('ol-btn').addEventListener('click', () => addList('1. '));
+        });
+    </script>
+</body>
+</html>
